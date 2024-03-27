@@ -10,6 +10,7 @@ function clm_manage_column($columns){
     unset($columns['comments']);
     $columns['id'] = 'Post Id';
     $columns['thumbnail'] = 'Thumbnail';
+    $columns['wordcount'] = 'wordcount';
     return $columns;
 }
  add_filter( 'manage_pages_columns', 'clm_manage_column');
@@ -19,9 +20,15 @@ function clm_manage_column($columns){
     }elseif('thumbnail' == $column){
         $thumbnail = get_the_post_thumbnail($post_id, array(100,50));
         echo $thumbnail;
+    }elseif('wordcount' == $column){
+        $_post = get_post($post_id);
+        $content = $_post->post_content;
+        $word_n = str_word_count(strip_tags($content));
+        echo $word_n;
     }
  }
  add_action( 'manage_pages_custom_column', 'clm_custom_column',10,2);
+//  filter based on post id 
  function manage_filter(){
     if(isset($_GET['post_type'])  == 'page'){
         $filter = isset($_GET['demofilter']) ? $_GET['demofilter'] : '';
@@ -115,5 +122,5 @@ function clm_manage_column($columns){
     }
  }
  add_action( 'pre_get_posts','filter_get_post_thumbnail');
- 
+
 ?>
